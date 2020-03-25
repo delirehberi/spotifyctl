@@ -11,12 +11,12 @@ I wanted to use the [Spotifyd](https://github.com/Spotifyd/spotifyd) tool on Nix
 - [x] Pause the current song at the active device
 - [x] Play the next song at the active device
 - [x] Play the previous song at the active device
-- [] Play the song with the given id
-- [] Show the currently playing song
+- [ ] Play the song with the given id
+- [ ] Show the currently playing song
 - [x] Get device lists
-- [] Set as active the device with the given id
-- [] Set as active the first device in the device list
-- [] Refresh the access token automatically
+- [ ] Set as active the device with the given id
+- [ ] Set as active the first device in the device list
+- [ ] Refresh the access token automatically
 
 ## Usage
 I implement play, pause, next,  previous commands yet. The tool work in progress. But still, you may want to use this tool; you have to build yourself with Stack. Before the building, you have to get a client id and client secret from spotify.Set callback url as `http://127.0.0.1:9988/oauthCallback`
@@ -39,11 +39,11 @@ For first run, you need set a client as active in spotify web player.
 - [x] pause
 - [x] next
 - [x] prev
-- [] play SONGID
-- [] current
+- [ ] play SONGID
+- [ ] current
 - [x] device list
-- [] device select
-- [] device select DEVICEID
+- [ ] device select
+- [ ] device select DEVICEID
 
 
 Your contributions are welcome. Feel free to open an issue when you find a bug.
