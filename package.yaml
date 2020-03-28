@@ -34,6 +34,8 @@ dependencies:
 - lens
 - lens-aeson
 - http-client
+- hspec
+- QuickCheck
 
 library:
   source-dirs: src
@@ -59,3 +61,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - spotifyctl
+    - hspec
