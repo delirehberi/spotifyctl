@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aaf5f69d889c60e3dfa9d62d42ec5e9edbffc306c498f30f19c7932cd6679cf1
+-- hash: 02f4d1842bf495ce25a8e29e224f9dfac2488375dbf27465a7463f59c9710360
 
 name:           spotifyctl
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
     , base >=4.7 && <5
     , base64-bytestring
     , bytestring
+    , directory
     , hspec
     , http-client
     , http-types
@@ -66,6 +67,7 @@ executable spotifyctl-exe
     , base >=4.7 && <5
     , base64-bytestring
     , bytestring
+    , directory
     , hspec
     , http-client
     , http-types
@@ -94,6 +96,7 @@ test-suite spotifyctl-test
     , base >=4.7 && <5
     , base64-bytestring
     , bytestring
+    , directory
     , hspec
     , http-client
     , http-types

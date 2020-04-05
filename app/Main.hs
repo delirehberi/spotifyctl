@@ -13,6 +13,8 @@ main = do
 
 command :: [String] -> IO ()
 command ["-h"] = help
+command ["help"] = help
+command ("setup":client_id:client_secret:_) = setup client_id client_secret
 command ["auth"] = auth
 command ["refresh"] = refresh
 command ["next"] = nextSong

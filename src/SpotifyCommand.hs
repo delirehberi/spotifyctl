@@ -21,19 +21,21 @@ import           Control.Concurrent.Async
 import Control.Lens
 import Data.Aeson.Lens (_String, key, nth)
 import Data.Aeson 
+
 help :: IO ()
 help = putStr [r|
   -h                Help 
-
-  auth              Authorize the spotify client via OAuth
-  next              Play next song 
-  prev              Play previous song 
-  pause             Pause the currently playing song
-  play              Play the last paused song 
-  play SONGID       Play the song which defined in given id
-  search SONGNAME   Search for a song and returns the list of ids
-  current           Returns currently playing song
-  device -h         Returns device subcommand help text
+  
+  setup  CLIENT_ID CLIENT_SECRET    Configure and authorize spotify client
+  auth                              Authorize the spotify client via OAuth
+  next                              Play next song 
+  prev                              Play previous song 
+  pause                             Pause the currently playing song
+  play                              Play the last paused song 
+  play SONGID                       Play the song which defined in given id
+  search SONGNAME                   Search for a song and returns the list of ids
+  current                           Returns currently playing song
+  device -h                         Returns device subcommand help text
   |]
 
 
@@ -55,8 +57,13 @@ authApp toDie req resp =
         spkey <- spotifyKey
         (r,code) <- authHandler req
         t <- fetchToken spkey code
-        saveToken (t ^. WR.responseBody)
-        putStrLn "Authorization completed. You can use the other commands now."
+        let tJ = decode (t ^. WR.responseBody)
+        case tJ of 
+          Just x -> do 
+            saveToken x
+            putStrLn "Authorization completed. You can use the other commands now."
+          Nothing -> putStrLn "Error!"
+
         putMVar toDie ()
         resp r
       x -> resp $ responseLBS status404 [("Content-Type","text/html")] "Content not found"
@@ -134,3 +141,10 @@ listDevices  = do
   
 selectDevice :: String -> IO ()
 selectDevice deviceName = return ()
+
+setup :: String -> String -> IO ()
+setup client_id client_secret = do 
+  saveClientSecrets client_id client_secret
+  auth
+
+

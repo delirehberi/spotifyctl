@@ -4,10 +4,9 @@ import Control.Exception (evaluate)
 import SpotifyApi
 
 main :: IO ()
-main = hspec $ do
+main = hspec $
   describe "SpotifyApiUtils" $ do
-    it "removes the prefix from string" $ do
-      prefixRemover "device_" "device_id" `shouldBe` ("id":: String)
-    it "generates query string with given list of string, string tuple" $ do
-      (foldl queryString "" [("key","value")] ) `shouldBe` ("&key=value"::String)
-      
+  it "removes the prefix from string" $
+    prefixRemover "device_" "device_id" `shouldBe` ("id":: String)
+  it "generates query string with given list of string, string tuple" $
+    foldl queryString "" [("key","value")] `shouldBe` ("&key=value"::String)

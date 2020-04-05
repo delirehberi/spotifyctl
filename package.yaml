@@ -35,7 +35,8 @@ dependencies:
 - lens-aeson
 - http-client
 - hspec
-- QuickCheck
+- QuickCheck 
+- directory
 
 library:
   source-dirs: src
