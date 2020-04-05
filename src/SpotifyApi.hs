@@ -17,24 +17,52 @@ import qualified Data.ByteString.Base64 as B64
 import System.Environment (getEnv)
 import           Data.List (isPrefixOf)
 import Control.Exception as E
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe) 
+import System.Directory
 
 baseurl :: String
 baseurl = "https://api.spotify.com/v1"
 
 spotifyKey :: IO OAuthInfo
 spotifyKey = do
-  client_id <- getEnv "CLIENTID"
-  client_secret <- getEnv "CLIENTSECRET"
-
+  config <- readConfig 
   return OAuthInfo { 
-    oauthClientId = client_id
-  , oauthClientSecret =  client_secret 
+    oauthClientId = config_client_id config
+  , oauthClientSecret =  config_client_secret config
   , oauthCallback =  "http://127.0.0.1:9988/oauthCallback"
   , oauthOAuthorizeEndpoint =  "https://accounts.spotify.com/authorize" 
   , oauthAccessTokenEndpoint = "https://accounts.spotify.com/api/token"
 }
 
+data Config = Config {
+   config_token :: Token
+  ,config_client_id :: String
+  ,config_client_secret :: String
+} deriving (Generic, Show)
+instance FromJSON Config where
+  parseJSON = genericParseJSON defaultOptions 
+    { fieldLabelModifier = prefixRemover "config_"}
+    
+instance ToJSON Config where 
+  toJSON     = genericToJSON defaultOptions 
+    { fieldLabelModifier = prefixRemover "config_"}
+  
+  toEncoding = genericToEncoding defaultOptions 
+    { fieldLabelModifier = prefixRemover "config_"}
+  
+
+newEmptyConfig :: Config
+newEmptyConfig = Config {
+  config_token=Token {
+    access_token= ""
+    ,token_type=""
+    ,scope=""
+    ,expires_in=0
+    ,refresh_token=Nothing 
+  }
+  ,config_client_id=""
+  ,config_client_secret=""
+}
 
 data OAuthInfo = OAuthInfo {
     oauthClientId :: String
@@ -111,8 +139,19 @@ fetchToken key code = do
     opts = defaults & header "Authorization" .~ [authorization]
   postWith opts ( oauthAccessTokenEndpoint key) params
 
-saveToken :: BSL.ByteString -> IO ()
-saveToken = BSL.writeFile "/home/delirehberi/.spotifyctl"
+saveToken :: Token -> IO ()
+saveToken token = do 
+  config <- readConfig
+  config_file <- configFile
+  let newConfig  = config {config_token=token}
+  BSL.writeFile config_file $ encode newConfig
+
+saveClientSecrets :: String -> String -> IO ()
+saveClientSecrets client_id client_secret = do
+  config <- readConfig
+  config_file <- configFile
+  let newConfig = config {config_client_id = client_id, config_client_secret=client_secret}  
+  BSL.writeFile config_file $ encode newConfig
 
 addRefreshToken :: Response Token -> Token -> Token
 addRefreshToken newToken oldToken = Token {
@@ -136,8 +175,8 @@ refreshToken token = do
   
   r <- asJSON =<< postWith opts (oauthAccessTokenEndpoint spkey) params
   let newToken =  addRefreshToken r token
-  saveToken $ encode newToken
-  readToken
+  saveToken  newToken
+  config_token <$> readConfig
 
 touchRequest :: Token -> String -> String -> IO Bool
 touchRequest token command  method= do
@@ -169,11 +208,21 @@ homedir = do
   user <- getEnv "USER"
   return ("/home/" ++ user ++ "/")
 
+readConfig :: IO Config
+readConfig = do
+  config_file <- configFile
+  file_exists <- doesFileExist config_file
+  case file_exists of 
+      True -> do 
+        content <- BSL.readFile config_file
+        let decoded = decode content :: Maybe Config
+        case decoded of 
+          Just x -> return x
+          Nothing -> error $ "Can`t parsed config."
+      False -> return newEmptyConfig
+    
+
 readToken :: IO Token
-readToken = do 
-  home <- homedir
-  content <- BSL.readFile (home ++ ".spotifyctl")
-  let decoded = decode content :: Maybe Token
-  case decoded of 
-    Just x -> return x
-    Nothing -> error $ "Can't read the file in " ++ home 
+readToken = readConfig <&> config_token
+configFile ::IO FilePath
+configFile = homedir <> pure ".spotifyctl"
