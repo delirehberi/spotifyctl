@@ -179,7 +179,7 @@ refreshToken token = do
   config_token <$> readConfig
 
 touchRequest :: Token -> String -> String -> IO Bool
-touchRequest token command  method= do
+touchRequest token command method= do
   r <- customMethodWith method (authOpts token) (apiUrl "me/player/" ++ command)
   case r ^. responseStatus . WR.statusCode of 
     200 -> return True
