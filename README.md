@@ -15,16 +15,16 @@ I wanted to use the [Spotifyd](https://github.com/Spotifyd/spotifyd) tool on Nix
 - [ ] Play the song with the given id
 - [ ] Show the currently playing song
 - [x] Get device lists
-- [ ] Set as active the device with the given id
-- [ ] Set as active the first device in the device list
+- [x] Set as active the device with the given id
+- [x] Set as active the first device in the device list
 - [ ] Refresh the access token automatically
 
 ## Usage
-I implement play, pause, next,  previous commands yet. The tool work in progress. But still, you may want to use this tool; you have to build yourself with Stack. Before the building, you have to get a client id and client secret from spotify.Set callback url as `http://127.0.0.1:9988/oauthCallback`
+I implement play, pause, next,  previous and device commands yet. The tool work in progress. But still, you may want to use this tool; you have to build yourself with Stack. Before the building, you have to get a client id and client secret from spotify.Set callback url as `http://127.0.0.1:9988/oauthCallback`
 
 And then, run the `spotifyctl setup CLIENT_ID CLIENT_SECRET` command and follow the redirections. Do not forget replace your CLIENT_ID and CLIENT_SECRET values to command.
 
-Just first run, you have to set a client as active in spotify web player.
+You need an active client for using this tool. I use spotifyd. You can select the active device with `spotifyctl device select` command. You can select a specified device with `spotifyctl device select DEVICENAME` command. You can view active device list with `spotifyctl device list` command.
 
 ## Commands
 - [x] setup
@@ -37,8 +37,8 @@ Just first run, you have to set a client as active in spotify web player.
 - [ ] play SONGID
 - [ ] current
 - [x] device list
-- [ ] device select
-- [ ] device select DEVICEID
+- [x] device select
+- [x] device select DEVICEID
 
 
 Your contributions are welcome. Feel free to open an issue when you find a bug.

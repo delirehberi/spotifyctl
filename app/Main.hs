@@ -20,7 +20,7 @@ command ["refresh"] = refresh
 command ["next"] = nextSong
 command ["prev"] = previousSong
 command ["pause"] = pause
-command ["play"] = playCurrent
+command ["play"] = playCurrent Nothing
 command ["current"] = putStrLn =<< showCurrentSong
 command ("play":xs) = playSong $ head xs 
 command ("device":xs) = deviceCommand xs

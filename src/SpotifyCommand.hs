@@ -5,6 +5,7 @@ module SpotifyCommand where
 
 import Text.RawString.QQ
 import SpotifyApi
+import qualified SpotifyApi as SA (queryString)
 import Network.Wai
 import qualified Network.Wai as W
 import Network.HTTP.Types (status200,status404)
@@ -106,10 +107,14 @@ pause  = do
     True -> return ()
     False -> error "Command wont work."
 
-playCurrent :: IO ()
-playCurrent = do 
+playCurrent :: Maybe String -> IO ()
+playCurrent device = do 
   token <- readToken
-  result <- touchRequest token "play" "PUT"
+  let qp dev= case dev of 
+                Just d ->  foldl SA.queryString "?" [("device_id",d)]
+                _ ->  ""
+  
+  result <- touchRequest token ("play" ++ (qp device)) "PUT"
   case result of
     True -> return ()
     False -> error "Command wont work."
@@ -140,7 +145,7 @@ listDevices  = do
   return d
   
 selectDevice :: String -> IO ()
-selectDevice deviceName = return ()
+selectDevice deviceName = playCurrent (Just deviceName)
 
 setup :: String -> String -> IO ()
 setup client_id client_secret = do 
