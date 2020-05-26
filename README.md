@@ -1,5 +1,6 @@
 # spotifyctl
 This tool provides a control tool for Spotify clients. It uses Spotify Web API for interacting with a client.
+[![Run on Repl.it](https://repl.it/badge/github/delirehberi/spotifyctl)](https://repl.it/github/delirehberi/spotifyctl)
 
 ## Motivation
 I wanted to use the [Spotifyd](https://github.com/Spotifyd/spotifyd) tool on Nixos, but I don't want to resolve the [DBUS problem](https://community.spotify.com/t5/Desktop-Linux/Spotify-D-Bus-issue-cannot-send-CLI-commands/td-p/4528662). And I need to do practice with Haskell then I decided to write that tool.
