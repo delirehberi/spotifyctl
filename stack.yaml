@@ -66,4 +66,4 @@ packages:
 # compiler-check: newer-minor
 nix:
   enable: true
-  shell-file: shell.nix
+  shell-file: build-shell.nix
