@@ -182,8 +182,7 @@ touchRequest :: Token -> String -> String -> IO Bool
 touchRequest token command method= do
   r <- customMethodWith method (authOpts token) (apiUrl "me/player/" ++ command)
   case r ^. responseStatus . WR.statusCode of 
-    200 -> return True
-    202 -> return True
+    204 -> return True
     _ -> return False
 
 
